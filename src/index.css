@@ -1,0 +1,54 @@
+/* src/index.css */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.dndflow {
+  display: flex;
+  height: 100%;
+}
+
+.reactflow-wrapper {
+  height: 100%;
+  flex-grow: 1;
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  padding: 20px;
+  border-right: 2px solid #eee;
+  background: #f3f3f3;
+  font-family: sans-serif;
+}
+
+.description {
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+}
+
+.dndnode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  cursor: grab;
+}
+
+.dndnode.input {
+  background-color: #f3f3f3;
+}
+
+.dndnode.output {
+  background-color: #f3f3f3;
+}
