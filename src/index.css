@@ -52,3 +52,17 @@ aside {
 .dndnode.output {
   background-color: #f3f3f3;
 }
+
+
+/* src/index.css */
+.llm-model-node {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: white;
+  width: 150px;
+}
+.llm-model-node input {
+  width: 100%;
+  margin-top: 5px;
+}

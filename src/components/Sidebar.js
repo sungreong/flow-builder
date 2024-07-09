@@ -33,6 +33,13 @@ const Sidebar = ({ onTrigger }) => {
       >
         Output Node
       </div>
+      <div
+        className="dndnode"
+        onDragStart={(event) => onDragStart(event, 'llmModel')}
+        draggable
+      >
+        LLM Model Node
+      </div>
       <button onClick={onTrigger}>Trigger Flow</button>
     </aside>
   );
