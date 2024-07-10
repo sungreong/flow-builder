@@ -40,7 +40,15 @@ const Sidebar = ({ onTrigger }) => {
       >
         LLM Model Node
       </div>
+      <div
+        className="dndnode groupNode"
+        onDragStart={(event) => onDragStart(event, 'groupNode')}
+        draggable
+      >
+        Group Node
+      </div>
       <button onClick={onTrigger}>Trigger Flow</button>
+
     </aside>
   );
 };

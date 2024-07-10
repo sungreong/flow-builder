@@ -1,0 +1,30 @@
+.modal-content {
+padding: 20px;
+background-color: #f9f9f9;
+border-radius: 8px;
+}
+
+.modal-content h2 {
+margin-bottom: 20px;
+}
+
+.modal-content label {
+display: block;
+margin-top: 10px;
+font-weight: bold;
+}
+
+.modal-content input,
+.modal-content select {
+width: 100%;
+padding: 8px;
+margin-top: 5px;
+margin-bottom: 15px;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+
+.template-selector {
+margin-bottom: 20px;
+}

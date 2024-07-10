@@ -10,7 +10,10 @@ import ReactFlow, {
   
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-
+import './style.css';
+import { addGroupNode, addNode, updateGroupNodeSize } from './../utils/NodeUtils';
+import GroupNode from './GroupNode';
+import NodeTemplateSelector from './NodeTemplateSelector';
 import Sidebar from './Sidebar';
 import Modal from './Modal';
 import LLMModelNode from './LLMModelNode';
@@ -20,53 +23,8 @@ const initialNodes = [
 ];
 
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2', animated: true }];
-let id = 3;
-const getId = () => `dndnode_${id++}`;
-const getEdgeId = () => `edge_${id++}`;
-const nodeTypes = { llmModel: LLMModelNode };
 
-
-const templates = {
-  default: (node, handleInputChange) => (
-    <>
-      <label>API Key:</label>
-      <input
-        type="text"
-        value={node.data.apiKey}
-        onChange={(e) => handleInputChange('apiKey', e.target.value)}
-      />
-      <label>Model:</label>
-      <input
-        type="text"
-        value={node.data.model}
-        onChange={(e) => handleInputChange('model', e.target.value)}
-      />
-    </>
-  ),
-  advanced: (node, handleInputChange) => (
-    <>
-      <label>API Key:</label>
-      <input
-        type="text"
-        value={node.data.apiKey}
-        onChange={(e) => handleInputChange('apiKey', e.target.value)}
-      />
-      <label>Model:</label>
-      <input
-        type="text"
-        value={node.data.model}
-        onChange={(e) => handleInputChange('model', e.target.value)}
-      />
-      <label>Endpoint:</label>
-      <input
-        type="text"
-        value={node.data.endpoint}
-        onChange={(e) => handleInputChange('endpoint', e.target.value)}
-      />
-    </>
-  ),
-  // 더 많은 템플릿 추가 가능
-};
+const nodeTypes = { llmModel: LLMModelNode, groupNode: GroupNode };
 
 
 const DnDFlowInner  = () => {
@@ -79,6 +37,20 @@ const DnDFlowInner  = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const reactFlowWrapper = useRef(null);
   const { screenToFlowPosition } = useReactFlow();
+  const onNodesChangeWithUpdate = useCallback(
+    (changes) => {
+      onNodesChange(changes);
+      changes.forEach(change => {
+        if (change.type === 'position' || change.type === 'dimensions') {
+          const groupNodeId = nodes.find(node => node.id === change.id)?.parentId;
+          if (groupNodeId) {
+            updateGroupNodeSize(groupNodeId, nodes, setNodes);
+          }
+        }
+      });
+    },
+    [nodes, onNodesChange, setNodes]
+  );
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
@@ -95,8 +67,10 @@ const DnDFlowInner  = () => {
       nds.map((node) => (node.id === selectedNode.id ? { ...node, data: { ...node.data, [field]: value } } : node))
     );
     setSelectedNode((node) => ({ ...node, data: { ...node.data, [field]: value } }));
+    if (selectedNode.parentId) {
+      updateGroupNodeSize(selectedNode.parentId, nodes, setNodes);
+    }
   };
-
   const handleTemplateChange = (event) => {
     const template = event.target.value;
     handleInputChange('template', template);
@@ -121,49 +95,24 @@ const DnDFlowInner  = () => {
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = {
-        id: getId(),
-        type,
-        position,
-        data: { label: `${type} node` },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
+      if (type === 'groupNode') {
+        addGroupNode(position, setNodes, setEdges);
+      } else {
+        addNode(type, position, setNodes);
+      }
     },
     [screenToFlowPosition]
   );
-  const renderNodeTemplate = (node) => {
-    if (node.type === 'llmModel') {
-      return (
-        <>
-          <label>Template:</label>
-          <select value={node.data.template} onChange={handleTemplateChange}>
-            <option value="default">Default</option>
-            <option value="advanced">Advanced</option>
-            {/* 다른 템플릿 옵션 추가 가능 */}
-          </select>
-          {templates[node.data.template](node, handleInputChange)}
-        </>
-      );
-    }
-    return (
-      <>
-        <label>Label:</label>
-        <input
-          type="text"
-          value={node.data.label || ''}
-          onChange={(e) => handleInputChange('label', e.target.value)}
-        />
-      </>
-    );
-  };
+
+
+
   return (
       <div className="dndflow">
           <div className="reactflow-wrapper" ref={reactFlowWrapper}>
             <ReactFlow
               nodes={nodes}
               edges={edges}
-              onNodesChange={onNodesChange}
+              onNodesChange={onNodesChangeWithUpdate}
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
               onNodeClick={onNodeClick}
@@ -181,8 +130,8 @@ const DnDFlowInner  = () => {
             <div>
               <h2>Edit Node</h2>
               <p>ID: {selectedNode.id}</p>
-              {renderNodeTemplate(selectedNode)}
-            </div>
+              <NodeTemplateSelector node={selectedNode} handleInputChange={handleInputChange} handleTemplateChange={handleTemplateChange} />
+              </div>
           )}
         </Modal>
       </div>
