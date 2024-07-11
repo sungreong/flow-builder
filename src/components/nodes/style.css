@@ -1,0 +1,43 @@
+/* src/style.css */
+.aside {
+width: 200px;
+padding: 10px;
+background: #f5f5f5;
+border-right: 1px solid #ddd;
+}
+
+.group {
+margin-bottom: 20px;
+}
+
+.dndnode {
+padding: 10px;
+border: 1px solid #ddd;
+background: #fff;
+cursor: grab;
+margin-bottom: 5px;
+}
+
+.input-node {
+background-color: #e0f7fa;
+padding: 10px;
+border-radius: 5px;
+}
+
+.llm-model-node {
+background-color: #ffeb3b;
+padding: 10px;
+border-radius: 5px;
+}
+
+.output-node {
+background-color: #c8e6c9;
+padding: 10px;
+border-radius: 5px;
+}
+
+.function-node {
+background-color: #f48fb1;
+padding: 10px;
+border-radius: 5px;
+}

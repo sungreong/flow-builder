@@ -12,11 +12,10 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import './style.css';
 import { addGroupNode, addNode, updateGroupNodeSize } from './../utils/NodeUtils';
-import GroupNode from './GroupNode';
 import NodeTemplateSelector from './NodeTemplateSelector';
 import Sidebar from './Sidebar';
 import Modal from './Modal';
-import LLMModelNode from './LLMModelNode';
+import nodeTypes from './NodeTypes';
 const initialNodes = [
   { id: '1', type: 'input', position: { x: 250, y: 5 }, data: { label: 'An input node' } },
   { id: '2', type: 'llmModel', position: { x: 100, y: 100 }, data: { label: 'LLM Model Node', apiKey: 'Your API Key', model: 'Your Model', template: 'advanced' } },
@@ -24,14 +23,7 @@ const initialNodes = [
 
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2', animated: true }];
 
-const nodeTypes = { llmModel: LLMModelNode, groupNode: GroupNode };
-
-
 const DnDFlowInner  = () => {
-
-    
-
-
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);

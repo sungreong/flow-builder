@@ -1,6 +1,7 @@
 // src/components/LLMModelNode.js
 import React from 'react';
 import { Handle } from 'reactflow';
+import "./style.css";
 
 const LLMModelNode = ({ data }) => {
   return (
